@@ -1,22 +1,22 @@
-var API_KEY_HEADER_NAME = null;
-var API_KEY_QUERY_PARAM_NAME = null;
+var apiKeyHeader;
+var apiKeyQueryParam;
 var apiKeys = new Set();
 
 function init(config) {
 
-    API_KEY_HEADER_NAME = config.apiKeyHeaderName;
-    API_KEY_QUERY_PARAM_NAME = config.apiKeyQueryParamName;
+    apiKeyHeader = config.apiKeyHeader;
+    apiKeyQueryParam = config.apiKeyQueryParam;
 
     for (key of config.apiKeys) {
         apiKeys.add(key)
     }
 }
 
-function apiKeyAuth(request) {
+function apiKey(request) {
 
-    if (API_KEY_HEADER_NAME !== null) {
-        let headerApiKey = request.headers.get(API_KEY_HEADER_NAME);
-        if (apiKeys.has(headerApiKey)) {
+    if (typeof apiKeyHeader !== 'undefined') {
+        let headerValue = request.headers.get(apiKeyHeader);
+        if (apiKeys.has(headerValue)) {
             return;
         }
     }
@@ -26,4 +26,5 @@ function apiKeyAuth(request) {
     });
 }
 
-exports.apiKeyAuth = apiKeyAuth;
+exports.init = init;
+exports.apiKey = apiKey;
